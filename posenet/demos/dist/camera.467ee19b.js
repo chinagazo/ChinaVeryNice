@@ -44725,7 +44725,9 @@ function decodeSinglePose(e, t, r) {
 }
 
 var MOBILENET_BASE_URL = "https://storage.googleapis.com/tfjs-models/savedmodel/posenet/mobilenet/",
-    RESNET50_BASE_URL = "https://storage.googleapis.com/tfjs-models/savedmodel/posenet/resnet50/";
+    RESNET50_BASE_URL = "./models/";
+
+// "https://storage.googleapis.com/tfjs-models/savedmodel/posenet/resnet50/";
 
 function resNet50Checkpoint(e, t) {
   var r = "model-stride" + e + ".json";
