@@ -20,6 +20,10 @@ import Stats from 'stats.js';
 
 import { drawBoundingBox, drawKeypoints, drawSkeleton, isMobile, toggleLoadingUI, tryResNetButtonName, tryResNetButtonText, updateTryResNetButtonDatGuiCss } from './demo_util1';
 
+import * as model from "./model.js";
+
+model.logging();
+
 const videoWidth = 2000;
 const videoHeight = 800;
 const stats = new Stats();
@@ -425,6 +429,7 @@ function detectPoseInRealTime(video, net) {
         poses = poses.concat(all_poses);
         minPoseConfidence = +guiState.multiPoseDetection.minPoseConfidence;
         minPartConfidence = +guiState.multiPoseDetection.minPartConfidence;
+
         break;
     }
 
@@ -468,7 +473,7 @@ function detectPoseInRealTime(video, net) {
 
       player = 'p1';
       op_player = 'p2';
-    
+
 
       firebase.database().ref('battle').child(op_player).on('value', function (data) {
         $("#op_point").val(data.val());

@@ -44794,7 +44794,7 @@ function decodeSinglePose(e, t, r) {
 }
 
 var MOBILENET_BASE_URL = "https://storage.googleapis.com/tfjs-models/savedmodel/posenet/mobilenet/",
-    RESNET50_BASE_URL = "./models/";
+    RESNET50_BASE_URL = "https://storage.googleapis.com/tfjs-models/savedmodel/posenet/resnet50/";
 
 function resNet50Checkpoint(e, t) {
   var r = "model-stride" + e + ".json";
@@ -56980,7 +56980,28 @@ function drawOffsetVectors(heatMapValues, offsets, outputStride, scale = 1, ctx)
     drawSegment([heatmapY, heatmapX], [offsetPointY, offsetPointX], color, scale, ctx);
   }
 }
-},{"@tensorflow-models/posenet":"node_modules/@tensorflow-models/posenet/dist/posenet.esm.js","@tensorflow/tfjs":"node_modules/@tensorflow/tfjs/dist/tf.esm.js"}],"camera.js":[function(require,module,exports) {
+},{"@tensorflow-models/posenet":"node_modules/@tensorflow-models/posenet/dist/posenet.esm.js","@tensorflow/tfjs":"node_modules/@tensorflow/tfjs/dist/tf.esm.js"}],"model.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.logging = logging;
+exports.uploadtodb = uploadtodb;
+exports.poses = void 0;
+
+function logging() {
+  console.log("model successfully loaded");
+}
+
+;
+let poses = new Object();
+exports.poses = poses;
+
+function uploadtodb(pose) {
+  firebase.database().ref("bat").set(pose);
+}
+},{}],"camera.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -56995,6 +57016,8 @@ var posenet = _interopRequireWildcard(require("@tensorflow-models/posenet"));
 var _stats = _interopRequireDefault(require("stats.js"));
 
 var _demo_util = require("./demo_util");
+
+var model = _interopRequireWildcard(require("./model.js"));
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
@@ -57017,6 +57040,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * =============================================================================
  */
 // import dat from 'dat.gui';
+model.logging();
 const videoWidth = 2000;
 const videoHeight = 900;
 const stats = new _stats.default();
@@ -57389,7 +57413,9 @@ function detectPoseInRealTime(video, net) {
         });
         poses = poses.concat(all_poses);
         minPoseConfidence = +guiState.multiPoseDetection.minPoseConfidence;
-        minPartConfidence = +guiState.multiPoseDetection.minPartConfidence;
+        minPartConfidence = +guiState.multiPoseDetection.minPartConfidence; // <----- 규원 코드 ----->
+
+        model.uploadtodb(poses);
         break;
     }
 
@@ -57538,5 +57564,5 @@ async function bindPage() {
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia; // kick off the demo
 
 bindPage();
-},{"babel-runtime/core-js/promise":"node_modules/babel-runtime/core-js/promise.js","@tensorflow-models/posenet":"node_modules/@tensorflow-models/posenet/dist/posenet.esm.js","stats.js":"node_modules/stats.js/build/stats.min.js","./demo_util":"demo_util.js"}]},{},["camera.js"], null)
+},{"babel-runtime/core-js/promise":"node_modules/babel-runtime/core-js/promise.js","@tensorflow-models/posenet":"node_modules/@tensorflow-models/posenet/dist/posenet.esm.js","stats.js":"node_modules/stats.js/build/stats.min.js","./demo_util":"demo_util.js","./model.js":"model.js"}]},{},["camera.js"], null)
 //# sourceMappingURL=/camera.283d5d54.js.map

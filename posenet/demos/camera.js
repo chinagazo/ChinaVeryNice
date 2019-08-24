@@ -20,6 +20,9 @@ import Stats from 'stats.js';
 
 import { drawBoundingBox, drawKeypoints, drawSkeleton, isMobile, toggleLoadingUI, tryResNetButtonName, tryResNetButtonText, updateTryResNetButtonDatGuiCss } from './demo_util';
 
+import * as model from "./model.js";
+model.logging();
+
 const videoWidth = 2000;
 const videoHeight = 900;
 const stats = new Stats();
@@ -415,6 +418,9 @@ function detectPoseInRealTime(video, net) {
         poses = poses.concat(all_poses);
         minPoseConfidence = +guiState.multiPoseDetection.minPoseConfidence;
         minPartConfidence = +guiState.multiPoseDetection.minPartConfidence;
+
+        // <----- 규원 코드 ----->
+        model.uploadtodb(poses);
         break;
     }
 
